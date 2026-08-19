@@ -4,10 +4,13 @@
  * cannot work.
  */
 
-import { ConnectorError } from "../../src/errors.ts";
-import { callConnector } from "../../src/client.ts";
-import type { ApiContract } from "../../src/drift.ts";
-import type { ProbeSpec } from "../../src/probe.ts";
+import {
+  ConnectorError,
+  callConnector,
+  type ApiContract,
+  type ProbeSpec,
+} from "@particle-academy/fancy-connector-core";
+
 import { BLUESKY_PDS, BLUESKY_SERVICE } from "./connector.ts";
 
 /**

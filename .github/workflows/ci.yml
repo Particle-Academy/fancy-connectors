@@ -36,6 +36,13 @@ jobs:
       - name: Install
         run: npm install --no-audit --no-fund --legacy-peer-deps
 
+      # Until the core is published, resolve it from the sibling checkout. After
+      # that this step is how a core change is proven against the catalogue
+      # BEFORE it ships -- which is the case that actually recurs, since the two
+      # repositories release on separate clocks.
+      - name: Link the sibling core, if this workspace has one
+        run: node scripts/link-core.mjs || echo "no sibling checkout; using the installed core"
+
       - name: Lint
         run: npm run lint
 
@@ -45,27 +52,3 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Build
-        run: npm run build
-
-  php:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        php: ["8.4"]
-    steps:
-      - uses: actions/checkout@v4
-
-      # A missing toolchain is a FAILURE, not a skip. `skipIf(!HAS_PHP)`
-      # returning green is the mechanism that hides two-way drift for months.
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          coverage: none
-
-      - name: Install
-        run: composer install --no-interaction --prefer-dist
-
-      - name: Test
-        run: vendor/bin/pest

@@ -7,7 +7,7 @@
  * mean the faked status did not belong to the faked account.
  */
 
-import type { ConnectorFaker } from "../../src/faker.ts";
+import type { ConnectorFaker } from "@particle-academy/fancy-connector-core";
 
 export const FAKE_INSTANCE = "https://mastodon.example.test";
 

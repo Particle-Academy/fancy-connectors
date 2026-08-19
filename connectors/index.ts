@@ -7,8 +7,8 @@
  * Every directory under `connectors/` is a self-contained unit: a
  * `ProviderAdapter`, a `Connector`, an `ApiContract`, a `ProbeSpec`, a
  * deterministic faker, and a README that names the trap. A consumer copies ONE
- * directory into their project and rewrites its `../../src/*` imports to
- * `@particle-academy/fancy-connectors`. Nothing else changes, and adding a
+ * directory into their project and rewrites its `*` imports to
+ * `@particle-academy/fancy-connector-core`. Nothing else changes, and adding a
  * connector costs no new dependency.
  *
  * That is why each connector declares its own `*Target` type rather than
@@ -33,10 +33,13 @@
  * tree reads `process.env`, and a test asserts it over the whole source.
  */
 
-import type { RenderedPayload } from "../src/render.ts";
-import type { ApiContract } from "../src/drift.ts";
-import type { ProbeSpec } from "../src/probe.ts";
-import type { Catalogue } from "../src/seam.ts";
+import {
+  assertConnectorApi,
+  type ApiContract,
+  type Catalogue,
+  type ProbeSpec,
+  type RenderedPayload,
+} from "@particle-academy/fancy-connector-core";
 
 import { blueskyConnector, blueskyProvider } from "./bluesky/connector.ts";
 import { BLUESKY_CONTRACT, BLUESKY_PROBE } from "./bluesky/contract.ts";
@@ -95,6 +98,20 @@ export const EXEMPLAR_CATALOGUE: Catalogue<PostTarget> = {
     telegram: telegramConnector,
   },
 };
+
+/**
+ * Refuse any connector written against a core surface this core does not run.
+ *
+ * At ASSEMBLY, not at call time: a mismatch discovered on the first real request
+ * is a mismatch discovered in production, and this module is imported by
+ * everything that uses the catalogue. See `compat.ts` in the core for why the
+ * number exists at all — the short version is that a connector is VENDORED, so
+ * nothing else can tell a frozen copy that the surface it was written against
+ * has moved.
+ */
+for (const connector of Object.values(EXEMPLAR_CATALOGUE.connectors)) {
+  assertConnectorApi(connector.id, connector.connectorApi);
+}
 
 /** Every contract, for an out-of-band drift check. Never run at call time. */
 export const EXEMPLAR_CONTRACTS: ApiContract[] = [

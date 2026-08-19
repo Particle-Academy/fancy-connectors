@@ -18,7 +18,7 @@
  */
 
 import { EXEMPLAR_PROBES } from "../connectors/index.ts";
-import { runProbes } from "../src/probe.ts";
+import { runProbes } from "@particle-academy/fancy-connector-core";
 
 const report = await runProbes(EXEMPLAR_PROBES);
 

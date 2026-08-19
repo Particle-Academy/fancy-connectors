@@ -16,10 +16,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
-import { registerTransport } from "../src/client.ts";
-import { resetRateState } from "../src/delivery.ts";
-import { capabilityProblems } from "../src/metrics.ts";
-import type { Connector } from "../src/seam.ts";
+import {
+  capabilityProblems,
+  registerTransport,
+  resetRateState,
+  type Connector,
+} from "@particle-academy/fancy-connector-core";
+
 import { EXEMPLAR_CATALOGUE, EXEMPLAR_CONTRACTS, EXEMPLAR_PROBES, type PostTarget } from "../connectors/index.ts";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -334,10 +337,21 @@ function typescriptUnder(dir: string): string[] {
   return out;
 }
 
-test("NOTHING under connectors/ or src/ reads the environment", () => {
-  const files = [...typescriptUnder(path.join(root, "connectors")), ...typescriptUnder(path.join(root, "src"))];
+test("NOTHING in this repository reads the environment", () => {
+  // `connectors/` and `scripts/` are the whole of this repository's source; the
+  // core's own tree is scanned by the identical test in the core repository, so
+  // neither half is trusted to the other's discipline.
+  const files = [...typescriptUnder(path.join(root, "connectors")), ...typescriptUnder(path.join(root, "scripts"))];
 
-  assert.ok(files.length >= 20, "the scan found almost no files, which usually means it scanned the wrong place");
+  // Anti-vacuity. A scan that silently found nothing passes forever, which is
+  // the failure mode of every "assert there are no offenders" test. The floor is
+  // derived rather than typed: every connector carries at least connector.ts,
+  // contract.ts and faker.ts, plus the catalogue index.
+  const floor = Object.keys(EXEMPLAR_CATALOGUE.connectors).length * 3 + 1;
+  assert.ok(
+    files.length >= floor,
+    `the scan found ${files.length} files and expected at least ${floor} — it scanned the wrong place`,
+  );
 
   assert.deepEqual(
     files.flatMap(environmentReads),

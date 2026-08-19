@@ -1,6 +1,4 @@
 node_modules/
 dist/
-vendor/
 .phpunit.cache/
-composer.lock
 package-lock.json

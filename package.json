@@ -1,7 +1,8 @@
 {
   "name": "@particle-academy/fancy-connectors",
   "version": "0.1.0",
-  "description": "The runtime under every Fancy connector: modes and estates, connections, one call path, a failure taxonomy that separates \"it never arrived\" from \"nobody can tell\", deterministic fakers, webhook verification, pure versioned rendering, declared metric shapes, credential-free probes, and API-drift reporting. Owns the wire; never the gates.",
+  "private": true,
+  "description": "The Fancy connector catalogue. Connectors ship as VENDORED SOURCE — you copy one directory into your project and own it — so this package is never published; the registry serves the source and `fancy-cli` copies it. Built on @particle-academy/fancy-connector-core.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Particle-Academy/fancy-connectors.git"
@@ -9,66 +10,30 @@
   "homepage": "https://github.com/Particle-Academy/fancy-connectors#readme",
   "bugs": "https://github.com/Particle-Academy/fancy-connectors/issues",
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
-    },
-    "./connectors/*": "./connectors/*",
-    "./package.json": "./package.json"
-  },
-  "files": [
-    "dist",
-    "connectors",
-    "README.md",
-    "CHANGELOG.md",
-    "LICENSE"
-  ],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
     "lint": "tsc --noEmit",
     "test": "node --import tsx --test tests/*.test.ts",
     "probe": "node --import tsx scripts/probe.ts",
     "drift": "node --import tsx scripts/drift.ts",
-    "clean": "rm -rf dist",
-    "prepublishOnly": "tsup"
+    "link-core": "node scripts/link-core.mjs"
+  },
+  "dependencies": {
+    "@particle-academy/fancy-connector-core": ">=0.1.0 <2.0.0"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",
-    "tsup": "^8.5.0",
     "tsx": "^4.19.0",
     "typescript": "^5.8.0"
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "keywords": [
     "connectors",
     "api",
     "integrations",
-    "webhooks",
-    "idempotency",
-    "retry",
-    "openapi",
-    "api-drift",
+    "vendored",
     "fancy-ui",
     "particle-academy"
   ],
   "license": "MIT",
-  "sideEffects": false,
-  "overrides": {
-    "esbuild": "^0.28.1"
-  },
   "engines": {
     "node": ">=22"
   }

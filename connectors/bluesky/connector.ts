@@ -1,9 +1,10 @@
 /**
  * Bluesky — AT Protocol, and the three things it makes you get right.
  *
- * Vendored source. It imports from `../../src/*` here; a consumer who copies
- * this directory rewrites those to `@particle-academy/fancy-connectors` and
- * changes nothing else.
+ * Vendored source: a consumer copies this directory into their own project and
+ * owns it. It imports the runtime from `@particle-academy/fancy-connector-core`,
+ * which is the ONE dependency a connector costs — and the reason the core is a
+ * package while the catalogue is not.
  *
  * ## What this connector is an exemplar OF
  *
@@ -37,23 +38,31 @@
  *   is barely a send.
  */
 
-import { postChain, type ChainLinks } from "../../src/chain.ts";
-import { callConnector, type ServiceDescriptor } from "../../src/client.ts";
-import { respectRate, type DeliveryDeclaration } from "../../src/delivery.ts";
-import { ConnectorAmbiguous } from "../../src/errors.ts";
-import { reported } from "../../src/metrics.ts";
-import type { ConnectorMode } from "../../src/mode.ts";
-import { isEmptyPayload, render, type RenderRules, type RenderedPayload } from "../../src/render.ts";
-import type {
-  CallResult,
-  Connector,
-  MetricDescriptor,
-  MetricSample,
-  Problem,
-  ProviderAdapter,
-  VerifyResult,
-} from "../../src/seam.ts";
-import { linkRanges, type ByteRange } from "../../src/text.ts";
+import {
+  ConnectorAmbiguous,
+  callConnector,
+  isEmptyPayload,
+  linkRanges,
+  postChain,
+  render,
+  reported,
+  respectRate,
+  type ByteRange,
+  type CallResult,
+  type ChainLinks,
+  type Connector,
+  type ConnectorMode,
+  type DeliveryDeclaration,
+  type MetricDescriptor,
+  type MetricSample,
+  type Problem,
+  type ProviderAdapter,
+  type RenderRules,
+  type RenderedPayload,
+  type ServiceDescriptor,
+  type VerifyResult,
+} from "@particle-academy/fancy-connector-core";
+
 import { blueskyFaker } from "./faker.ts";
 
 /* ── The host's content, as this connector needs it ──────────────────────── */
@@ -423,6 +432,16 @@ export const blueskyProvider: ProviderAdapter = {
 
 export const blueskyConnector: Connector<BlueskyTarget> = {
   id: "bluesky",
+  // The core surface this was written against — a LITERAL, never the
+  // imported CONNECTOR_API_VERSION.
+  //
+  // That distinction is the whole mechanism. This file is VENDORED: it is
+  // copied into a consumer's project and frozen there. If it read the
+  // constant, then upgrading the core would change what this copy claims
+  // to have been written against, and the check would agree with itself
+  // forever while the surface moved underneath. A literal is the only
+  // value that still means something a year after it was copied.
+  connectorApi: 1,
   label: "Bluesky",
   provider: "bluesky",
   capabilities: {

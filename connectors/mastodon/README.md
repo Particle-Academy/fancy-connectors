@@ -1,7 +1,7 @@
 # Mastodon
 
 Vendored source. Copy `connectors/mastodon/` into your project and rewrite the
-`../../src/*` imports to `@particle-academy/fancy-connectors`.
+`*` imports to `@particle-academy/fancy-connector-core`.
 
 ```
 connector.ts   the ProviderAdapter + Connector

@@ -1,7 +1,7 @@
 # Bluesky (AT Protocol)
 
 Vendored source. Copy `connectors/bluesky/` into your project and rewrite the
-`../../src/*` imports to `@particle-academy/fancy-connectors`. Nothing else
+`*` imports to `@particle-academy/fancy-connector-core`. Nothing else
 changes — there is no package to install for the connector itself.
 
 ```

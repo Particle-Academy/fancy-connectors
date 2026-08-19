@@ -8,9 +8,14 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { registerTransport, type PreparedRequest, type TransportResponse } from "../src/client.ts";
-import { resetRateState } from "../src/delivery.ts";
-import { compareShape } from "../src/metrics.ts";
+import {
+  compareShape,
+  registerTransport,
+  resetRateState,
+  type PreparedRequest,
+  type TransportResponse,
+} from "@particle-academy/fancy-connector-core";
+
 import {
   MASTODON_DEFAULT_MAX_CHARACTERS,
   mastodonConnector,

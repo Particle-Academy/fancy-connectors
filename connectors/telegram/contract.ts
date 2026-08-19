@@ -2,10 +2,13 @@
  * What this connector depends on, and the probe that proves the transport.
  */
 
-import { callConnector } from "../../src/client.ts";
-import type { ApiContract } from "../../src/drift.ts";
-import { ConnectorError } from "../../src/errors.ts";
-import type { ProbeSpec } from "../../src/probe.ts";
+import {
+  ConnectorError,
+  callConnector,
+  type ApiContract,
+  type ProbeSpec,
+} from "@particle-academy/fancy-connector-core";
+
 import { TELEGRAM_API, TELEGRAM_SERVICE, telegramPath } from "./connector.ts";
 
 /**

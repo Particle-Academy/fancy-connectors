@@ -7,11 +7,16 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { registerTransport, type PreparedRequest, type TransportResponse } from "../src/client.ts";
-import { resetRateState } from "../src/delivery.ts";
-import { capabilityProblems } from "../src/metrics.ts";
-import { render } from "../src/render.ts";
-import type { Connector } from "../src/seam.ts";
+import {
+  capabilityProblems,
+  registerTransport,
+  render,
+  resetRateState,
+  type Connector,
+  type PreparedRequest,
+  type TransportResponse,
+} from "@particle-academy/fancy-connector-core";
+
 import {
   DISCORD_RULES,
   discordConnector,

@@ -8,10 +8,16 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { registerTransport, type PreparedRequest, type TransportResponse } from "../src/client.ts";
-import { resetRateState, shouldRetry } from "../src/delivery.ts";
-import { capabilityProblems } from "../src/metrics.ts";
-import type { Connector } from "../src/seam.ts";
+import {
+  capabilityProblems,
+  registerTransport,
+  resetRateState,
+  shouldRetry,
+  type Connector,
+  type PreparedRequest,
+  type TransportResponse,
+} from "@particle-academy/fancy-connector-core";
+
 import {
   TELEGRAM_RULES,
   classificationOf,

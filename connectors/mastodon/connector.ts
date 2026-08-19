@@ -1,8 +1,8 @@
 /**
  * Mastodon — the fediverse, and the one variable no other provider here has.
  *
- * Vendored source. It imports from `../../src/*`; a consumer who copies this
- * directory rewrites those to `@particle-academy/fancy-connectors`.
+ * Vendored source. It imports from `*`; a consumer who copies this
+ * directory rewrites those to `@particle-academy/fancy-connector-core`.
  *
  * ## The variable: there is no single host
  *
@@ -32,22 +32,30 @@
  * never `ok: true` with a null `ref`.
  */
 
-import { postChain, type ChainLinks } from "../../src/chain.ts";
-import { callConnector, type ServiceDescriptor } from "../../src/client.ts";
-import { respectRate, type DeliveryDeclaration } from "../../src/delivery.ts";
-import { ConnectorAmbiguous, ConnectorConfigError } from "../../src/errors.ts";
-import { reported } from "../../src/metrics.ts";
-import type { ConnectorMode } from "../../src/mode.ts";
-import { isEmptyPayload, render, type RenderRules, type RenderedPayload } from "../../src/render.ts";
-import type {
-  CallResult,
-  Connector,
-  MetricDescriptor,
-  MetricSample,
-  Problem,
-  ProviderAdapter,
-  VerifyResult,
-} from "../../src/seam.ts";
+import {
+  ConnectorAmbiguous,
+  ConnectorConfigError,
+  callConnector,
+  isEmptyPayload,
+  postChain,
+  render,
+  reported,
+  respectRate,
+  type CallResult,
+  type ChainLinks,
+  type Connector,
+  type ConnectorMode,
+  type DeliveryDeclaration,
+  type MetricDescriptor,
+  type MetricSample,
+  type Problem,
+  type ProviderAdapter,
+  type RenderRules,
+  type RenderedPayload,
+  type ServiceDescriptor,
+  type VerifyResult,
+} from "@particle-academy/fancy-connector-core";
+
 import { mastodonFaker } from "./faker.ts";
 
 /* ── The host's content, as this connector needs it ──────────────────────── */
@@ -488,6 +496,16 @@ export const mastodonProvider: ProviderAdapter = {
 
 export const mastodonConnector: Connector<MastodonTarget> = {
   id: "mastodon",
+  // The core surface this was written against — a LITERAL, never the
+  // imported CONNECTOR_API_VERSION.
+  //
+  // That distinction is the whole mechanism. This file is VENDORED: it is
+  // copied into a consumer's project and frozen there. If it read the
+  // constant, then upgrading the core would change what this copy claims
+  // to have been written against, and the check would agree with itself
+  // forever while the surface moved underneath. A literal is the only
+  // value that still means something a year after it was copied.
+  connectorApi: 1,
   label: "Mastodon",
   provider: "mastodon",
   capabilities: { call: true, metrics: true, feedback: false },

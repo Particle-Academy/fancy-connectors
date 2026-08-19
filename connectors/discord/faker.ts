@@ -11,7 +11,7 @@
  * point at.
  */
 
-import type { ConnectorFaker } from "../../src/faker.ts";
+import type { ConnectorFaker } from "@particle-academy/fancy-connector-core";
 
 /** Not a shape Discord mints. Twelve zeros, then six seeded digits. */
 function fakeSnowflake(hex: string): string {

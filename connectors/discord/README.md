@@ -1,7 +1,7 @@
 # Discord (channel webhook)
 
 Vendored source. Copy `connectors/discord/` into your project and rewrite the
-`../../src/*` imports to `@particle-academy/fancy-connectors`.
+`*` imports to `@particle-academy/fancy-connector-core`.
 
 ```
 connector.ts   the ProviderAdapter + Connector

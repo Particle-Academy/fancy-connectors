@@ -9,11 +9,16 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { registerTransport, type PreparedRequest, type TransportResponse } from "../src/client.ts";
-import { resetRateState } from "../src/delivery.ts";
-import { compareShape } from "../src/metrics.ts";
-import { render } from "../src/render.ts";
-import { sliceByteRange } from "../src/text.ts";
+import {
+  compareShape,
+  registerTransport,
+  render,
+  resetRateState,
+  sliceByteRange,
+  type PreparedRequest,
+  type TransportResponse,
+} from "@particle-academy/fancy-connector-core";
+
 import {
   BLUESKY_RULES,
   blueskyConnector,

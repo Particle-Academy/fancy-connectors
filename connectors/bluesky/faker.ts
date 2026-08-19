@@ -12,7 +12,7 @@
  * is exactly the kind of difference this whole layer exists to avoid.
  */
 
-import type { ConnectorFaker } from "../../src/faker.ts";
+import type { ConnectorFaker } from "@particle-academy/fancy-connector-core";
 
 /** 24 characters after `did:plc:`, matching the real format, visibly fake. */
 export const FAKE_DID = "did:plc:fake0000000000000000000";

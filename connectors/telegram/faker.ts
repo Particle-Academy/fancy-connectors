@@ -12,7 +12,7 @@
  * chat and recognisable next to a real one.
  */
 
-import type { ConnectorFaker } from "../../src/faker.ts";
+import type { ConnectorFaker } from "@particle-academy/fancy-connector-core";
 
 export const FAKE_BOT_USERNAME = "fake_example_bot";
 

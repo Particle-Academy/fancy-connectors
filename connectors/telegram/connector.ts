@@ -1,8 +1,8 @@
 /**
  * Telegram — a bot posting to a channel or a group.
  *
- * Vendored source. It imports from `../../src/*`; a consumer who copies this
- * directory rewrites those to `@particle-academy/fancy-connectors`.
+ * Vendored source. It imports from `*`; a consumer who copies this
+ * directory rewrites those to `@particle-academy/fancy-connector-core`.
  *
  * ## Three facts that shape every line below
  *
@@ -29,18 +29,27 @@
  * There is no partial case — a message is one request.
  */
 
-import { callConnector, type ServiceDescriptor } from "../../src/client.ts";
-import { respectRate, type Classified, type DeliveryDeclaration } from "../../src/delivery.ts";
-import { ConnectorAmbiguous, ConnectorConfigError, httpFailure } from "../../src/errors.ts";
-import type { ConnectorMode } from "../../src/mode.ts";
-import { isEmptyPayload, render, type RenderRules, type RenderedPayload } from "../../src/render.ts";
-import type {
-  CallResult,
-  Connector,
-  Problem,
-  ProviderAdapter,
-  VerifyResult,
-} from "../../src/seam.ts";
+import {
+  ConnectorAmbiguous,
+  ConnectorConfigError,
+  callConnector,
+  httpFailure,
+  isEmptyPayload,
+  render,
+  respectRate,
+  type CallResult,
+  type Classified,
+  type Connector,
+  type ConnectorMode,
+  type DeliveryDeclaration,
+  type Problem,
+  type ProviderAdapter,
+  type RenderRules,
+  type RenderedPayload,
+  type ServiceDescriptor,
+  type VerifyResult,
+} from "@particle-academy/fancy-connector-core";
+
 import { telegramFaker } from "./faker.ts";
 
 /* ── The host's content, as this connector needs it ──────────────────────── */
@@ -356,6 +365,16 @@ export const telegramProvider: ProviderAdapter = {
 
 export const telegramConnector: Connector<TelegramTarget> = {
   id: "telegram",
+  // The core surface this was written against — a LITERAL, never the
+  // imported CONNECTOR_API_VERSION.
+  //
+  // That distinction is the whole mechanism. This file is VENDORED: it is
+  // copied into a consumer's project and frozen there. If it read the
+  // constant, then upgrading the core would change what this copy claims
+  // to have been written against, and the check would agree with itself
+  // forever while the surface moved underneath. A literal is the only
+  // value that still means something a year after it was copied.
+  connectorApi: 1,
   label: "Telegram",
   provider: "telegram",
   // The Bot API gives a bot no dependable view of a channel post's views or

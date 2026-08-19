@@ -21,7 +21,7 @@
  */
 
 import { EXEMPLAR_CONTRACTS } from "../connectors/index.ts";
-import { checkAgainstOpenApi, unchecked, type ApiContract, type DriftReport } from "../src/drift.ts";
+import { checkAgainstOpenApi, unchecked, type ApiContract, type DriftReport } from "@particle-academy/fancy-connector-core";
 
 async function fetchSpec(url: string): Promise<unknown | null> {
   try {
