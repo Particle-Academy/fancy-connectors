@@ -360,6 +360,12 @@ export const blueskyProvider: ProviderAdapter = {
   // an app password has none to ask for. The empty list is the statement.
   scopes: [],
   sandbox: "none",
+  // Declared on the ADAPTER as well as on each VerifyResult, because a
+  // surface has to be able to say what a check will and will not prove
+  // BEFORE anyone runs it. A green tick that means more than it should is
+  // worse than no tick, and the moment to say so is while somebody is
+  // still deciding whether the setup is finished.
+  proves: BLUESKY_VERIFY_PROVES,
   fields: [
     {
       key: "identifier",

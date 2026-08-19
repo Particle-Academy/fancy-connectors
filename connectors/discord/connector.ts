@@ -256,6 +256,12 @@ export const discordProvider: ProviderAdapter = {
   // empty list is the point: there is no consent screen and no scope creep.
   scopes: [],
   sandbox: "none",
+  // Declared on the ADAPTER as well as on each VerifyResult, because a
+  // surface has to be able to say what a check will and will not prove
+  // BEFORE anyone runs it. A green tick that means more than it should is
+  // worse than no tick, and the moment to say so is while somebody is
+  // still deciding whether the setup is finished.
+  proves: DISCORD_VERIFY_PROVES,
   fields: [
     {
       key: "webhookUrl",

@@ -13,6 +13,15 @@ which is what makes that safe rather than merely quiet.
 
 ## [Unreleased]
 
+### Changed
+
+- **Every provider now declares `proves` on the ADAPTER**, not only on each
+  `VerifyResult`. `providerProblems()` in core 0.2.0 caught all four of them the
+  day it was written, and it was right to: a setup surface has to be able to say
+  what a check will and will not prove *before* anyone runs it, which is the
+  wrong way round if the sentence only exists on the result.
+
+
 ## [0.1.0] — unreleased
 
 First cut: four exemplars, chosen for what each gets wrong when nobody is paying

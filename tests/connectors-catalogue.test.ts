@@ -17,6 +17,7 @@ import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
 import {
+  providerProblems,
   capabilityProblems,
   registerTransport,
   resetRateState,
@@ -385,4 +386,25 @@ test("the scan is not vacuous — it catches an offender and forgives a docblock
 
   // And the real file it is pointed at genuinely exercises the comment path.
   assert.match(readFileSync(path.join(root, "connectors", "index.ts"), "utf8"), /process\.env/);
+});
+
+test("every PROVIDER is as honest as every connector", () => {
+  // The sibling of capabilityProblems, one level up. It caught all four of these
+  // the day it was written: each declared `proves` on its VerifyResult and not
+  // on the adapter, so a setup surface could not say what a check would prove
+  // until somebody had already run it — which is the wrong order.
+  const findings = Object.values(EXEMPLAR_CATALOGUE.providers).flatMap(providerProblems);
+
+  assert.deepEqual(findings, []);
+});
+
+test("a provider that says it is implemented has actually had its estate checked", () => {
+  // `unverified` is a legitimate answer and the right one until somebody looks.
+  // What it must never be is the answer for something a person can run today,
+  // because this is the field where being wrong sends them to a live estate
+  // believing it is a test one.
+  for (const [id, provider] of Object.entries(EXEMPLAR_CATALOGUE.providers)) {
+    if (!provider.implemented) continue;
+    assert.notEqual(provider.sandbox, "unverified", `${id} is implemented and its sandbox shape is unverified`);
+  }
 });
