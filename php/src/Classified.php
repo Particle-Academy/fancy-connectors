@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ParticleAcademy\Connectors;
+
+/**
+ * One classified failure: what kind it was, what happened, and how long the
+ * provider asked us to wait.
+ *
+ * `retryAfter` is null when the provider said nothing, which is not the same as
+ * zero. Zero would mean "try immediately", and no provider has ever meant that
+ * by omitting the header.
+ */
+final readonly class Classified
+{
+    /**
+     * @param  int|null  $retryAfter  seconds the provider asked us to wait, when it said so
+     */
+    public function __construct(
+        public FailureKind $kind,
+        public string $detail,
+        public ?int $retryAfter = null,
+    ) {}
+}

@@ -1,0 +1,65 @@
+{
+    "name": "particle-academy/fancy-connectors",
+    "description": "The runtime under every Fancy connector: modes and estates, connections, one call path, a failure taxonomy that separates \"it never arrived\" from \"nobody can tell\", deterministic fakers, webhook verification, pure versioned rendering, declared metric shapes, credential-free probes, and API-drift reporting. Owns the wire; never the gates. PHP twin of @particle-academy/fancy-connectors.",
+    "type": "library",
+    "keywords": [
+        "connectors",
+        "api",
+        "integrations",
+        "webhooks",
+        "idempotency",
+        "retry",
+        "openapi",
+        "api-drift",
+        "fancy-ui",
+        "particle-academy"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/Particle-Academy/fancy-connectors",
+    "support": {
+        "issues": "https://github.com/Particle-Academy/fancy-connectors/issues",
+        "source": "https://github.com/Particle-Academy/fancy-connectors"
+    },
+    "authors": [
+        {
+            "name": "Particle Academy",
+            "homepage": "https://github.com/Particle-Academy"
+        }
+    ],
+    "require": {
+        "php": "^8.4"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.26",
+        "pestphp/pest": "^3.0|^4.0"
+    },
+    "suggest": {
+        "ext-curl": "Needed only by the bundled CurlTransport. A host that binds its own Transport needs nothing.",
+        "ext-intl": "Counts graphemes exactly. Without it Text falls back to a PCRE grapheme-cluster pattern, which agrees on everything a connector realistically sends but is not identical on rare clusters."
+    },
+    "autoload": {
+        "psr-4": {
+            "ParticleAcademy\\Connectors\\": "php/src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ParticleAcademy\\Connectors\\Tests\\": "php/tests/"
+        },
+        "files": [
+            "php/tests/Support.php"
+        ]
+    },
+    "scripts": {
+        "test": "pest",
+        "lint": "pint --test"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
