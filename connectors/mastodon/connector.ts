@@ -329,6 +329,19 @@ export function mastodonService(instance: string): ServiceDescriptor {
     },
     faker: mastodonFaker,
     idempotencyHeader: "Idempotency-Key",
+    // NO `providerCodeFrom`, deliberately — and `tests/provider-codes.test.ts`
+    // fails if one is added.
+    //
+    // Mastodon's error body has a field called `error`, the same name as
+    // Bluesky's, and it is not a code. The Error entity documents it as "The
+    // error message." (https://docs.joinmastodon.org/entities/Error/, read
+    // 2026-09-13), and the real refusal to an impossible token is
+    // `{"error":"The access token is invalid"}` — a sentence, which an instance
+    // is free to reword or translate. The docs' own example of a code-shaped
+    // `error` (`invalid_grant`) comes from the OAuth endpoints, which this
+    // connector never calls. So there is no stable code to carry: the status is
+    // the machine-readable answer, and a reader here would publish prose as
+    // something a host routes on.
   };
 }
 

@@ -109,6 +109,13 @@ catalogue is where "we always do X" quietly stops being true.
 - **`authStatuses` on a probe is per provider.** A Discord webhook answers 404
   for an unknown id, so 404 IS its auth answer; on a provider that does not do
   that, a 404 means the endpoint moved — the exact drift a probe is for.
+- **`providerCodeFrom` only where the provider DOCUMENTS a stable code**, cited
+  at the declaration, and a stated reason where there is none. Bluesky's XRPC
+  `error` name and Discord's integer `code` are carried; Mastodon's `error` is a
+  sentence and Telegram's `error_code` is documented as subject to change, so
+  neither is. Both directions are pinned by `tests/provider-codes.test.ts`,
+  which replays each provider's recorded refusal (`tests/real-refusals.ts`) —
+  a field that looks like a code is the plausible mistake, not the rare one.
 
 No network in tests. Ever. The fakers exist for exactly this.
 

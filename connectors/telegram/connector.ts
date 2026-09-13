@@ -217,6 +217,23 @@ export const TELEGRAM_SERVICE: ServiceDescriptor = {
     // Nothing. See the note above.
   },
   faker: telegramFaker,
+  // NO `providerCodeFrom`, deliberately — and `tests/provider-codes.test.ts`
+  // fails if one is added.
+  //
+  // The body does carry an integer `error_code`, and the real refusal to an
+  // impossible token is `{"ok":false,"error_code":401,"description":"Unauthorized: …"}`.
+  // Two reasons it is not carried:
+  //
+  // 1. Telegram says it is not stable: "An Integer 'error_code' field is also
+  //    returned, but its contents are subject to change in the future."
+  //    (https://core.telegram.org/bots/api#making-requests, read 2026-09-13).
+  //    A code a host routes on has to be one the provider promises to keep.
+  // 2. In the refusal recorded above it repeats the HTTP status, so carrying it
+  //    would add no information — only a second copy of `status` labelled as
+  //    something more specific.
+  //
+  // What Telegram does document for automated handling is `parameters`
+  // (`retry_after`, `migrate_to_chat_id`), which is not a code either.
 };
 
 /** `bot<token>/<method>` — the token is URL-encoded because it is a path segment. */

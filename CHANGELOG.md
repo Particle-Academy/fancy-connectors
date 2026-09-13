@@ -13,6 +13,38 @@ which is what makes that safe rather than merely quiet.
 
 ## [Unreleased]
 
+### Added
+
+- **`bluesky` and `discord` now declare `providerCodeFrom`, so a failed call
+  carries the provider's own error code.** Core 0.5.0 added the reader and no
+  connector here declared one, so `error.providerCode` was empty on every call —
+  which reads as "this provider has no code", false for two of the four.
+  - `bluesky` — the XRPC error name, e.g. `AuthenticationRequired`, via the new
+    pure `blueskyErrorNameFrom()`. Carried only when it is shaped like one (ASCII,
+    no whitespace, as the XRPC spec defines it), so a proxy's
+    `{"error":"Bad Gateway"}` is not published as a code.
+  - `discord` — the JSON error code, e.g. `10015` (Unknown webhook), via the new
+    pure `discordErrorCodeFrom()`. Integers only, as documented. Worth more here
+    than anywhere: a webhook's 404 is its auth answer, and only the code says
+    whether the webhook or the token was wrong.
+  - `mastodon` and `telegram` **deliberately declare none**, with the reason at
+    the declaration: Mastodon's `error` is documented as "The error message." (a
+    sentence — `"The access token is invalid"`), and Telegram documents
+    `error_code` as "subject to change in the future", besides repeating the
+    HTTP status.
+
+  `tests/provider-codes.test.ts` replays each provider's recorded refusal through
+  the connector's own service descriptor and pins all four decisions, both
+  directions. The two positive cases fail without the declarations; the guards
+  against a naive reader (`JSON.parse(body).error`, and the same on Mastodon or
+  Telegram) were checked by planting one in each connector — four of the seven
+  cases then fail. The recorded bodies moved to `tests/real-refusals.ts`, with
+  the Drift run they came from, shared with `probes-read-the-status.test.ts`.
+
+  **What a consumer must DO: nothing.** Re-vendor `bluesky` or `discord` to get
+  the code; a copy vendored earlier keeps working with it absent. Needs core
+  0.5.0 or later, which the floor already requires.
+
 ### Fixed
 
 - **The scheduled Drift workflow failed on every run since it was added — 25

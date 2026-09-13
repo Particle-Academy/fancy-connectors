@@ -60,6 +60,7 @@ import {
   type RenderRules,
   type RenderedPayload,
   type ServiceDescriptor,
+  type TransportResponse,
   type VerifyResult,
 } from "@particle-academy/fancy-connector-core";
 
@@ -278,6 +279,37 @@ export const BLUESKY_DELIVERY: DeliveryDeclaration = {
 /** The public PDS. A self-hosted PDS is a different base URL and the same code. */
 export const BLUESKY_PDS = "https://bsky.social";
 
+/**
+ * The XRPC error NAME off a failed response — `AuthenticationRequired`,
+ * `InvalidRequest`, `ExpiredToken` — or nothing. Carried as `error.providerCode`.
+ *
+ * A code a host can route on, because the spec makes it one: an XRPC error body's
+ * `error` is the *"type name of the error (generic ASCII constant, no
+ * whitespace)"*, and the human sentence lives in `message`
+ * (https://atproto.com/specs/xrpc, read 2026-09-13). The real refusal to an
+ * impossible app password is
+ * `{"error":"AuthenticationRequired","message":"Invalid identifier or password"}`.
+ *
+ * **Only a value shaped like that name is carried.** Anything with whitespace —
+ * a proxy's `{"error":"Bad Gateway"}` — is a sentence that happens to sit in the
+ * same field, and publishing it as a code is exactly the Mastodon mistake: the
+ * field is called `error` there too, and it holds prose. Pure and exported so the
+ * refusal is checkable without a network.
+ */
+export function blueskyErrorNameFrom(response: TransportResponse): string | undefined {
+  let body: unknown;
+
+  try {
+    body = JSON.parse(response.body);
+  } catch {
+    return undefined;
+  }
+
+  const name = (body as { error?: unknown } | null)?.error;
+
+  return typeof name === "string" && /^[\x21-\x7E]+$/.test(name) ? name : undefined;
+}
+
 export const BLUESKY_SERVICE: ServiceDescriptor = {
   service: "bluesky",
   title: "Bluesky",
@@ -294,6 +326,7 @@ export const BLUESKY_SERVICE: ServiceDescriptor = {
     if (credentials.accessJwt) request.headers.Authorization = `Bearer ${credentials.accessJwt}`;
   },
   faker: blueskyFaker,
+  providerCodeFrom: blueskyErrorNameFrom,
 };
 
 type BlueskySession = { accessJwt?: string; did?: string; handle?: string };

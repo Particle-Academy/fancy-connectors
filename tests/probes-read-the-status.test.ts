@@ -24,14 +24,7 @@ import { afterEach, test } from "node:test";
 import { probe, registerTransport, resetRateState, type PreparedRequest } from "@particle-academy/fancy-connector-core";
 
 import { EXEMPLAR_PROBES } from "../connectors/index.ts";
-
-/** What each provider actually answered the Drift workflow, body and all. */
-const REAL_REFUSALS: Record<string, { status: number; body: string }> = {
-  bluesky: { status: 401, body: '{"error":"AuthenticationRequired","message":"Invalid identifier or password"}' },
-  mastodon: { status: 401, body: '{"error":"The access token is invalid"}' },
-  discord: { status: 404, body: '{"message": "Unknown Webhook", "code": 10015}' },
-  telegram: { status: 401, body: '{"ok":false,"error_code":401,"description":"Unauthorized: invalid token specified"}' },
-};
+import { REAL_REFUSALS } from "./real-refusals.ts";
 
 function answerWith(status: number, body: string): PreparedRequest[] {
   const seen: PreparedRequest[] = [];

@@ -42,6 +42,7 @@ import {
   type RenderRules,
   type RenderedPayload,
   type ServiceDescriptor,
+  type TransportResponse,
   type VerifyResult,
 } from "@particle-academy/fancy-connector-core";
 
@@ -195,6 +196,39 @@ export const DISCORD_DELIVERY: DeliveryDeclaration = {
 /* ── The wire ────────────────────────────────────────────────────────────── */
 
 /**
+ * Discord's JSON error code off a failed response — `10015` for an unknown
+ * webhook, `50027` for an invalid webhook token — or nothing. Carried as
+ * `error.providerCode` (the core turns the integer into its decimal string).
+ *
+ * Discord documents these as the machine half of an error: *"Along with the HTTP
+ * error code, our API can also return more detailed error codes through a `code`
+ * key in the JSON error response. The response will also contain a `message` key
+ * containing a more friendly error string."*
+ * (https://docs.discord.com/developers/topics/opcodes-and-status-codes#json,
+ * read 2026-09-13). The real refusal to an impossible webhook is
+ * `{"message": "Unknown Webhook", "code": 10015}`.
+ *
+ * It is worth more here than on most providers, because a webhook's 404 IS its
+ * auth answer: the status says "no such webhook or wrong token" and only the
+ * code says which. **Only an integer is carried** — the documented type — so a
+ * 429 body (no `code`) or an edge proxy's HTML page produces nothing rather than
+ * a guess. Pure and exported so that is checkable without a network.
+ */
+export function discordErrorCodeFrom(response: TransportResponse): number | undefined {
+  let body: unknown;
+
+  try {
+    body = JSON.parse(response.body);
+  } catch {
+    return undefined;
+  }
+
+  const code = (body as { code?: unknown } | null)?.code;
+
+  return typeof code === "number" && Number.isSafeInteger(code) ? code : undefined;
+}
+
+/**
  * A descriptor per webhook, because the URL is both the host and the credential.
  *
  * `authorize` is deliberately empty and deliberately present: the token is a
@@ -215,6 +249,7 @@ export function discordService(parts: DiscordWebhookParts): ServiceDescriptor {
       // Nothing. The token is in the path — see the note above.
     },
     faker: discordFaker,
+    providerCodeFrom: discordErrorCodeFrom,
   };
 }
 
