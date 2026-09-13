@@ -13,6 +13,28 @@ which is what makes that safe rather than merely quiet.
 
 ## [Unreleased]
 
+### Fixed
+
+- **The scheduled Drift workflow failed on every run since it was added — 25
+  of 25 — while every provider answered correctly.** Each probe asks the real
+  provider to refuse an impossible credential and reads `error.status` off the
+  failed call. Core up to 0.4.0 threw that error with no `status` at all, so
+  Bluesky's, Mastodon's and Telegram's `401` and Discord's `404` all reported
+  *"the request failed before any status arrived"*, and the `drift` step behind
+  them never ran.
+
+  The fix is in `fancy-connector-core` 0.5.0, which keeps the status, the
+  classified error class and a declared provider code on a failed call. Here:
+  the core floor moves to **`>=0.5.0 <2.0.0`** — the probes in every
+  `contract.ts` rely on `status` being there, and a floor that admitted 0.4.0
+  claimed a core they cannot work with — and `tests/probes-read-the-status.test.ts`
+  replays each provider's real refusal through the probe's own request builder,
+  with no network, so `npm test` now sees what only a scheduled run could see
+  before. Against core 0.4.0 all eight per-probe cases in it fail.
+
+  **What a consumer must DO:** nothing in a vendored connector. A host running
+  these probes needs core 0.5.0 or later.
+
 ### Changed
 
 - **Every provider now declares `proves` on the ADAPTER**, not only on each
