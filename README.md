@@ -1,11 +1,19 @@
 # fancy-connectors
 
+[![Fancified](art/fancified.svg)](https://particle.academy)
+
 **The Fancy connector catalogue.** One directory per connector, shipped as
 **vendored source**: you copy the directory into your project and own it.
 
 ```bash
-npx fancy-cli@latest add connector bluesky
+# from a checkout of this repository
+cp -r connectors/bluesky path/to/your-project/connectors/bluesky
 ```
+
+`fancy-cli` has no `add connector` command (0.8.3 routes only `add node` as a
+subcommand), so `npx fancy-cli add connector bluesky` treats both words as
+component names: it vendors fancy-whiteboard's `Connector` component, then stops
+on `bluesky`, which the registry does not have. Copy the directory.
 
 That costs you exactly **one** dependency — the runtime the connector is written
 on:
@@ -79,6 +87,6 @@ checker that could not see is not a checker that saw nothing wrong.
 ---
 
 - [`AGENTS.md`](./AGENTS.md) — the invariants, and what a change here breaks.
-- [`fancy-connector-core`](../fancy-connector-core) — the runtime.
+- [`fancy-connector-core`](https://github.com/Particle-Academy/fancy-connector-core) — the runtime.
 
 MIT.
